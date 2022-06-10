@@ -15,6 +15,7 @@ class Account:
       self.savings=0
       self.saved=[]
       self.withdrawn_savings=[]
+      self.transaction=100
 
    def deposit(self,amount):
        if amount<=0:
@@ -28,6 +29,7 @@ class Account:
 
 
    def withdraw(self,amount):
+       amount-=self.transaction
        if amount>self.balance:
             return f"your balance {self.balance} cannot withraw {amount}"
        elif amount<=0:
@@ -58,21 +60,22 @@ class Account:
             return f" You have saved {amount} in your savings account,your balance is {self.savings}."
             
    def savings_withdrawals(self,amount):
-       count=0
-       if amount>self.savings:
-           f"Your savings is {self.savings} cannot withraw {amount}"
-       elif amount<0:
-           return f"withdrawal should be more than zero"
-       elif amount<4:
-           self.savings-=amount
-           count+=amount
-           count+=1
-           self.withdrawn_savings.append(amount)
-           print(self.withdrawn_savings)
-           return f"This is your {count} withdrawal and you have withdrawn {amount},your balance is {self.savings}."
-       else:
-           return f"You can't withdraw {amount} because you have reached the maximun withdrawals:{count},hence you cant withdraw from {self.savings}."
 
+        if amount>self.savings:
+            return f"Your savings is {self.savings} cannot withraw {amount}"
+        elif amount<0:
+            return f"withdrawal should be more than zero"
+        else:
+            if len(self.withdrawn_savings)<4:
+                 self.savings-=amount
+                 self.withdrawn_savings.append(amount)
+                 print(self.withdrawn_savings) 
+            else:
+                return f"You can't withdraw {amount} because you have reached the maximun withdrawals,hence you cant withdraw from {self.savings}."
+
+   def current_balance(self):
+    return f' Your current balance is {self.balance} ,while you savings balance is {self.savings}'
+   
 
 
 
