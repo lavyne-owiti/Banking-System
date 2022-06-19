@@ -5,17 +5,24 @@
 # Modify the withdrawal method to append each successful withdrawal to self.withdrawals
 # Add a new method called deposits_statement which prints each deposit in a new line
 # Add a new method called withdrawals_statement which prints each withdrawal in a new line
+from datetime import datetime
+from re import A
+
+
 class Account:
    def __init__(self,acc_no,acc_name):
       self.balance=0
+      self.loan_balance=0
       self.acc_no=acc_no
       self.acc_name=acc_name
       self.deposits=[]
       self.withdrawals=[]
       self.savings=0
       self.saved=[]
+      self.fullsatement=[]
       self.withdrawn_savings=[]
       self.transaction=100
+      self.date=datetime.now().strftime("%x %X")
 
    def deposit(self,amount):
        if amount<=0:
@@ -23,9 +30,15 @@ class Account:
        else:
            if amount>0:
                self.balance+=amount
+               deposit_details={}
                self.deposits.append(amount)
+               deposit_details['date']=self.date
+               deposit_details['amount']=amount
+               deposit_details['narration']=f'you deposited and balance is {self.balance}' 
+               self.fullsatement.append(deposit_details)
                print(self.deposits)
-               return f"you have deposited {amount},new balance is {self.balance}"
+               print(self.fullsatement)
+               return deposit_details
 
 
    def withdraw(self,amount):
@@ -36,11 +49,52 @@ class Account:
             return f"withdrawal should be more than zero"
        else:
            self.balance-=amount
+           withdraw_details={}
            self.withdrawals.append(amount)
-           print(self.withdrawals)
-           return f"you have deposited {amount},new balance is {self.balance}"
+           withdraw_details['date']=self.date
+           withdraw_details['amount']=amount
+           withdraw_details['narration']=f'you withdrew and balance is {self.balance}'
+           self.fullsatement.append(withdraw_details)
+           print(self.fullsatement)
+           return withdraw_details
+    
+   def full_statement(self):
+    for items in self.fullsatement:
+        date=items['date']
+        amount=items['amount']
+        narrate=items['narration']
+        print(f"On {date}---------{narrate}---------{amount}")
+
+   def borrow(self,amount):
+    count=sum(self.deposits)
+    qualification=count*1/3
+    interest=0.03*amount
+    if len(self.deposits)<10 :
+        return f"Deposits made must be more than 10"    
+    elif amount<100:
+        return f"Can,t borrow less than a 100 "
+    elif  amount>=qualification:
+        return f"Can't borrow more than your borrowing limit {qualification}" 
+    elif self.loan_balance>0:
+        return f"Can,t borrow another loan,till you pay {self.loan_balance}"
+    else:
+        self.loan_balance+=amount
+        self.loan_balance+=interest
+        return f"You have borrowed {amount} and your 3% interest will amount to {self.loan_balance}"
 
 
+   def loan_repayment(self,amount):
+     
+     if amount<self.loan_balance:
+        self.loan_balance-=amount
+        return f"you have paid {amount} and you loan balance is {self.loan_balance}"
+    
+     else:
+        overpay=amount-self.loan_balance
+        self.balance+=overpay
+        return f"you have overpaid {overpay} and you current balance is {self.balance}"
+          
+   
    def deposits_statement(self):
        for i in self.deposits:
          print(f"You have deposited {i}")
@@ -50,6 +104,11 @@ class Account:
        for j in self.withdrawals:
          print(f"You have withrawn {j}")
 
+   def transfer(self,amount,name_account):
+    transfer=sum(self.balance)
+    transfer-=amount
+    name_account.deposists(amount)
+     
    def saving(self,amount):
        if amount<=0:
             return f"savings amount should be more than zero"
@@ -75,9 +134,36 @@ class Account:
 
    def current_balance(self):
     return f' Your current balance is {self.balance} ,while you savings balance is {self.savings}'
-   
 
+account=Account('1234567','KCB') 
 
+print(account.deposit(3000))
+print(account.deposit(4000))
+print(account.deposit(2000))
+print(account.deposit(3000))
+print(account.deposit(4000))
+print(account.deposit(2000))
+print(account.deposit(3000))
+print(account.deposit(4000))
+print(account.deposit(2000))
+print(account.deposit(3000))
+print(account.deposit(4000))
+print(account.deposit(2000))
+print(account.deposits)
+account.full_statement()
+print(account.withdraw(1000))
+print(account.withdraw(2000))
+print(account.withdraw(2000))
+print(account.borrow(2000))
+# print(account.borrow(4000))
+print(account.loan_repayment(4000))
+print(account.transfer(20000,'acc'))
 
-
-           
+acc=Account('23456099','stanbic') 
+print(acc.deposit(3000))
+print(acc.deposit(4000))
+print(acc.deposit(2000))
+print(acc.deposit(3000))
+print(acc.deposit(4000))
+print(acc.deposit(2000))
+print(acc.deposit(3000))          
