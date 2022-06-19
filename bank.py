@@ -22,6 +22,7 @@ class Account:
       self.fullsatement=[]
       self.withdrawn_savings=[]
       self.transaction=100
+      self.list_transfer=[]
       self.date=datetime.now().strftime("%x %X")
 
    def deposit(self,amount):
@@ -105,9 +106,14 @@ class Account:
          print(f"You have withrawn {j}")
 
    def transfer(self,amount,name_account):
-    transfer=sum(self.balance)
-    transfer-=amount
-    name_account.deposists(amount)
+    total=amount+self.transaction
+    if total<self.balance:
+        self.balance-=total
+        name_account.deposit(amount)
+        the_trasfer={'date':self.date,'amount':amount,'narration':'you trasfered'}
+        self.list_transfer.append(the_trasfer)
+        return f"you have trasfered {amount} to {name_account.acc_name}.Your new balance is {self.balance}"
+
      
    def saving(self,amount):
        if amount<=0:
@@ -135,35 +141,3 @@ class Account:
    def current_balance(self):
     return f' Your current balance is {self.balance} ,while you savings balance is {self.savings}'
 
-account=Account('1234567','KCB') 
-
-print(account.deposit(3000))
-print(account.deposit(4000))
-print(account.deposit(2000))
-print(account.deposit(3000))
-print(account.deposit(4000))
-print(account.deposit(2000))
-print(account.deposit(3000))
-print(account.deposit(4000))
-print(account.deposit(2000))
-print(account.deposit(3000))
-print(account.deposit(4000))
-print(account.deposit(2000))
-print(account.deposits)
-account.full_statement()
-print(account.withdraw(1000))
-print(account.withdraw(2000))
-print(account.withdraw(2000))
-print(account.borrow(2000))
-# print(account.borrow(4000))
-print(account.loan_repayment(4000))
-print(account.transfer(20000,'acc'))
-
-acc=Account('23456099','stanbic') 
-print(acc.deposit(3000))
-print(acc.deposit(4000))
-print(acc.deposit(2000))
-print(acc.deposit(3000))
-print(acc.deposit(4000))
-print(acc.deposit(2000))
-print(acc.deposit(3000))          
